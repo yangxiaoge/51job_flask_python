@@ -22,15 +22,33 @@ header = {
 
 
 # 查询岗位
-def search_job(jobName):
+def search_job(jobName, qry_pages):
+    """
+    :param jobName: 岗位名称
+    :param qry_pages: 查询页面总数
+    :return: 岗位列表Json
+    """
     start_time = datetime.datetime.now()
+
+    if qry_pages is None:
+        qry_pages = 10
+
+    try:
+        qry_pages = int(qry_pages)
+        if qry_pages <= 0:
+            return "页面总数必须大于0！"
+    except Exception as e:
+        error_msg = f"页面总数{qry_pages}非数字，{e}"
+        print(error_msg)
+        return error_msg
 
     job_list = []
     # 取50页数据，知道某一页数据为0时
-    for index in range(1, 200):
+    for index in range(qry_pages):
         # for index in range(1, 2):
-        print("查询第%d页。。。" % index)
-        url = 'https://search.51job.com/list/070200,000000,0000,00,9,99,' + str(jobName) + ',2,' + str(index) + '.html'
+        print("查询第%d页。。。" % (index + 1))
+        url = 'https://search.51job.com/list/070200,000000,0000,00,9,99,' + str(jobName) + ',2,' + str(
+            index + 1) + '.html'
         html = get_page_html(url)
         # print(html)
 
@@ -95,4 +113,5 @@ def get_page_html(url):
 
 if __name__ == '__main__':
     job = input("请输入要搜索的职位：")
-    search_job(job)
+    pages = input("请输入查询总页数：")
+    search_job(job, pages)

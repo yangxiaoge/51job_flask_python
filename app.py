@@ -10,9 +10,9 @@ def hello_world():
     return 'Hello World!'
 
 
-@app.route('/job/<input_job>')
-def search_51_job(input_job):
-    return search_job(input_job)
+@app.route('/job/<input_job>/<qry_pages>')
+def search_51_job(input_job, qry_pages):
+    return search_job(input_job, qry_pages)
 
 
 if __name__ == '__main__':
