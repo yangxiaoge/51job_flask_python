@@ -10,6 +10,7 @@ import json
 import re
 
 import requests
+from bs4 import BeautifulSoup
 
 # 正则
 search_result = re.compile(r',"engine_search_result":(.*?),"jobid_count":"', re.S)
@@ -20,18 +21,17 @@ header = {
 }
 
 
+# 查询岗位
 def search_job(jobName):
     start_time = datetime.datetime.now()
 
     job_list = []
-    # 取30页数据，知道某一页数据为0时
-    for index in range(1, 50):
+    # 取50页数据，知道某一页数据为0时
+    for index in range(1, 200):
+        # for index in range(1, 2):
         print("查询第%d页。。。" % index)
         url = 'https://search.51job.com/list/070200,000000,0000,00,9,99,' + str(jobName) + ',2,' + str(index) + '.html'
-
-        r = requests.get(url, headers=header)
-        r.encoding = 'gbk'
-        html = r.text
+        html = get_page_html(url)
         # print(html)
 
         # 通过正则找到招聘公司数据
@@ -50,10 +50,12 @@ def search_job(jobName):
 
         for iData in data:
             # print(iData)
+
             job_item = {'company_name': iData['company_name'],
                         'providesalary_text': iData['providesalary_text'],
                         'attribute_text': iData['attribute_text'],
-                        'job_href': iData['job_href']}
+                        'job_href': iData['job_href'],
+                        'job_info': job_detail(iData['job_href'])}
             # print(job_item)
             job_list.append(job_item)
 
@@ -63,9 +65,32 @@ def search_job(jobName):
     return json.dumps(job_list)
 
 
-def getBaidu():
-    r = requests.get("https://www.baidu.com/")
-    print(r.headers)
+# 工作详情
+def job_detail(job_url):
+    html = get_page_html(job_url)
+    bs = BeautifulSoup(html, "html.parser")
+    infos = bs.select('.tCompany_main > .tBorderTop_box > .bmsg.job_msg.inbox > p')
+    info_str = ""
+    for i in infos:
+        # print(type(i))
+        # print(i.get_text())
+        info_str += i.text.strip() + "\n"
+
+    address = bs.select('.tCompany_main > .tBorderTop_box > .bmsg.inbox > .fp')
+    address_str = ""
+    for ii in address:
+        address_str += ii.text.strip()
+
+    job_info = f'职位信息：\n{info_str}\n{address_str}'
+    # print(job_info)
+    return job_info
+
+
+# 获取页面html
+def get_page_html(url):
+    r = requests.get(url, headers=header)
+    r.encoding = 'gbk'
+    return r.text
 
 
 if __name__ == '__main__':
