@@ -3,7 +3,7 @@
 # @Author : Bruce Yang
 # @File : job51_spider.py
 # @Software : PyCharm
-# @Description :
+# @Description : 51job网站招聘信息爬取
 
 import datetime
 import json
@@ -47,7 +47,14 @@ def search_job(jobName, qry_pages):
     for index in range(qry_pages):
         # for index in range(1, 2):
         print("查询第%d页。。。" % (index + 1))
-        url = 'https://search.51job.com/list/070200,000000,0000,00,9,99,' + str(jobName) + ',2,' + str(
+        # 南京
+        # url = 'https://search.51job.com/list/070200,000000,0000,00,9,99,' + str(jobName) + ',2,' + str(
+        # 江北新区&&浦口 && 工资15-20k && 20-30k
+        url = 'https://search.51job.com/list/070200,070207%252c070214,0000,00,9,08%252c09,' + str(jobName) + ',2,' + str(
+        # 深圳
+        # url = 'https://search.51job.com/list/040000,000000,0000,00,9,99,' + str(jobName) + ',2,' + str(
+        # 武汉
+        # url = 'https://search.51job.com/list/180200,000000,0000,00,9,99,' + str(jobName) + ',2,' + str(
             index + 1) + '.html'
         html = get_page_html(url)
         # print(html)
@@ -68,8 +75,20 @@ def search_job(jobName, qry_pages):
 
         for iData in data:
             # print(iData)
-
+            '''
+            {'type': 'engine_search_result', 'jt': '0', 'tags': [], 'ad_track': '', 'jobid': '125201993', 
+            'coid': '5753461', 'effect': '1', 'is_special_job': '', 'job_href': 'https://jobs.51job.com/nanjing-xwq/125201993.html?s=01&t=0',
+             'job_name': 'Python开发工程师', 'job_title': 'Python开发工程师', 'company_href': 'https://jobs.51job.com/all/co5753461.html',
+             'company_name': '江苏国密数字认证有限公司', 'providesalary_text': '0.9-1.4万/月', 'workarea': '070201', 
+             'workarea_text': '南京-玄武区', 'updatedate': '11-12', 'isIntern': '', 'iscommunicate': '', 
+             'companytype_text': '民营公司', 'degreefrom': '6', 'workyear': '4', 'issuedate': '2020-11-12 04:00:44', 'isFromXyz': '', 
+             'jobwelf': '五险一金 绩效奖金 周末双休 节日福利', 'jobwelf_list': ['五险一金', '绩效奖金', '周末双休', '节日福利'], 
+            'attribute_text': ['南京-玄武区', '2年经验', '本科', '招1人'], 'companysize_text': '少于50人', 'companyind_text': '互联网/电子商务', 'adid': ''}
+            '''
             job_item = {'company_name': iData['company_name'],
+                        'job_name': iData['job_name'],
+                        'workarea_text': iData['workarea_text'],
+                        'companysize_text': iData['companysize_text'],
                         'providesalary_text': iData['providesalary_text'],
                         'attribute_text': iData['attribute_text'],
                         'job_href': iData['job_href'],
