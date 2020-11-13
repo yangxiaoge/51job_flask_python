@@ -49,6 +49,8 @@ def search_job(jobName, qry_pages):
         print("查询第%d页。。。" % (index + 1))
         # 南京
         # url = 'https://search.51job.com/list/070200,000000,0000,00,9,99,' + str(jobName) + ',2,' + str(
+        # 江北新区&&浦口
+        # url = 'https://search.51job.com/list/070200,070207,0000,00,9,99,' + str(jobName) + ',2,' + str(
         # 江北新区&&浦口 && 工资15-20k && 20-30k
         url = 'https://search.51job.com/list/070200,070207%252c070214,0000,00,9,08%252c09,' + str(jobName) + ',2,' + str(
         # 深圳
