@@ -11,7 +11,7 @@ import sys
 import requests
 
 
-def start(mobile, pwd):
+def start(mobile, pwd, server_jiang):
     header = {
         "User-Agent": "EverPhoto/2.7.6 (Android;2702;ONEPLUS A6000;28;oppo)",
         "x-device-mac": "02:00:00:00:00:00",
@@ -49,17 +49,17 @@ def start(mobile, pwd):
         result_msg = "签到失败"
 
     # 签到结果通过server酱推送到微信
-    serverUrl = "https://sc.ftqq.com/你的server酱.send"
+    serverUrl = "https://sc.ftqq.com/%s.send" % server_jiang
     data = {
         "text": "时光相册：" + result_msg,
         "desp": "累计奖励：" + total_reward + " ，明日奖励：" + tomorrow_reward
     }
-    # requests.post(serverUrl, data)
+    requests.post(serverUrl, data)
 
     return data["text"] + "\n" + data["desp"]
 
 
 if __name__ == '__main__':
-    print("参数：" + str(sys.argv))
-    log = start(sys.argv[1], sys.argv[2])
+    # print("参数：" + str(sys.argv))
+    log = start(sys.argv[1], sys.argv[2], sys.argv[3])
     print(log)

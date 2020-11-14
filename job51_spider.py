@@ -46,6 +46,8 @@ def search_job(jobName, qry_pages):
     # 取50页数据，知道某一页数据为0时
     for index in range(qry_pages):
         # for index in range(1, 2):
+
+
         print("查询第%d页。。。" % (index + 1))
         # 南京
         # url = 'https://search.51job.com/list/070200,000000,0000,00,9,99,' + str(jobName) + ',2,' + str(
