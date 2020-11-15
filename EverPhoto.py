@@ -38,6 +38,7 @@ def start(mobile, pwd, server_jiang):
     # print(datas["data"]["checkin_result"])
     code = datas["code"]
     checkin_result = datas["data"]["checkin_result"]
+    continuity = datas["data"]["continuity"]
     total_reward = str(datas["data"]["total_reward"] // 1024 // 1024) + "M"
     tomorrow_reward = str(datas["data"]["tomorrow_reward"] // 1024 // 1024) + "M"
     if code == 0:
@@ -51,8 +52,8 @@ def start(mobile, pwd, server_jiang):
     # 签到结果通过server酱推送到微信
     serverUrl = "https://sc.ftqq.com/%s.send" % server_jiang
     data = {
-        "text": "时光相册：" + result_msg,
-        "desp": "累计奖励：" + total_reward + " ，明日奖励：" + tomorrow_reward
+        "text": f"时光相册：{result_msg}",
+        "desp": f"连续签到：{continuity}天" + f"\n累计奖励：{total_reward}" + f"\n明日奖励：{tomorrow_reward}"
     }
     requests.post(serverUrl, data)
 
