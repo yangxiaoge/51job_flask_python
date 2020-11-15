@@ -52,8 +52,8 @@ def start(mobile, pwd, server_jiang):
     # 签到结果通过server酱推送到微信
     serverUrl = "https://sc.ftqq.com/%s.send" % server_jiang
     data = {
-        "text": f"时光相册：{result_msg}",
-        "desp": f"连续签到：{continuity}天" + f"\n累计奖励：{total_reward}" + f"\n明日奖励：{tomorrow_reward}"
+        "text": "时光相册：%s" % result_msg,
+        "desp": "连续签到：%s天" % continuity + "\n累计奖励：%s" % total_reward + "\n明日奖励：%s" % tomorrow_reward
     }
     requests.post(serverUrl, data)
 
