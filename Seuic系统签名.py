@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # @Time : 2020/12/15 19:58
 # @Author : Bruce Yang
-# @File : pc.py
+# @File : Seuic系统签名.py
 # @Software : PyCharm
 # @Description : PC桌面软件
-
+import os
+# os.system某些命令会跳出终端,所以用subprocess
+import subprocess as run
 from tkinter import *
 from tkinter import filedialog
 from tkinter.messagebox import *
@@ -22,6 +24,20 @@ def select_apk_file():
 # 系统签名
 def sigh_apk(apk_path):
     print(apk_path)
+    print("\n")
+    system_signfile_path = os.getcwd() + r'/系统签名/通用签名'
+    signed_apk_name = apk_path.replace('.apk', '_sys_signed.apk')
+    # 脚本拼接
+    command = r'java -jar {}/signapk.jar {}/platform.x509.pem {}/platform.pk8 {} {}'.format(
+        system_signfile_path, system_signfile_path, system_signfile_path, apk_path, signed_apk_name
+    )
+    # 系统签名执行
+    sys_sign_result = run.call(command, shell=True)
+    if sys_sign_result == 0:
+        # 打开签名后的apk目录
+        run.call(r"start explorer /select,%s" % signed_apk_name, shell=True)
+    else:
+        showerror("错误", "系统签名失败")
 
 
 # 浏览本地文件夹，选择保存位置
@@ -29,6 +45,8 @@ def browse_folder():
     # 浏览选择本地文件夹
     apk_path = filedialog.askopenfilename()
     # 把获得路径，插入保存地址输入框（即插入input_save_address输入框）
+    # 先清空，再输入
+    et_file_path.delete(0, 'end')
     et_file_path.insert(0, apk_path)
 
 
@@ -70,6 +88,6 @@ win.geometry("{}x{}+{}+{}".format(ww, wh, int(x), int(y)))
 # 阻止窗口调整大小
 # win.resizable(0, 0)
 # 设置窗口图标
-# win.iconbitmap('F:\Python\GUI界面\You-get - v0 -20190507\play_24px_1099805_easyicon.net.ico')
+win.iconbitmap(r'D:\workspace\python\demo\shixun\51job_flask\favicon.ico')
 # 进入消息循环
 win.mainloop()
