@@ -3,11 +3,12 @@
 # 2. 找到timestamp规律构建URL循环翻页，获取一集所有的页数，封装成函数
 # 3. 找到target_id和vid的规律，获取12集的弹幕
 
-# 导入所需库
-import requests
 import json
 import time
+
 import pandas as pd
+# 导入所需库
+import requests
 
 
 def get_danmu_one_page(url_dm):
@@ -71,7 +72,8 @@ def get_danmu_all_page(target_id, vid):
     for time_stamp in range(15, 100, 30):  # 右侧设置一个足够大的数
         try:  # 异常处理
             # 构建URL
-            url_dm = 'https://mfm.video.qq.com/danmu?target_id={}&vid={}&timestamp={}'.format(target_id, vid, time_stamp)
+            url_dm = 'https://mfm.video.qq.com/danmu?target_id={}&vid={}&timestamp={}'.format(target_id, vid,
+                                                                                              time_stamp)
             # 调用函数
             df = get_danmu_one_page(url_dm)
             # 终止条件
@@ -92,6 +94,7 @@ def get_danmu_all_page(target_id, vid):
     print(f'爬虫程序中止，共获取{df_all.shape[0]}条弹幕!')
 
     return df_all
+
 
 # 获取target_id和vid，此处手动抓包获取
 
@@ -137,13 +140,10 @@ df_10.insert(0, 'episodes', '第五期下')
 
 # 列表存储
 df_list = [df_9, df_10]
-#df_1, df_2, df_3, df_4, df_5, df_6, df_7, df_8,
+# df_1, df_2, df_3, df_4, df_5, df_6, df_7, df_8,
 # 循环写出
 for df_name in df_list:
     # 读出数据
-    epi_num =df_name['episodes'][0]
+    epi_num = df_name['episodes'][0]
     print(f'正在写出第{epi_num}集的数据')
     df_name.to_csv(f'{epi_num}集.csv', index=True)
-
-
-
