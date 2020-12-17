@@ -145,6 +145,6 @@ thread_it(get_yiyan)
 # 阻止窗口调整大小
 # win.resizable(0, 0)
 # 设置窗口图标
-win.iconbitmap(r'D:\workspace\python\demo\shixun\51job_flask\favicon.ico')
+win.iconbitmap(os.getcwd() + r'/favicon.ico')
 # 进入消息循环
 win.mainloop()
