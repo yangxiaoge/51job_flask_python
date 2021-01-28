@@ -4,6 +4,7 @@
 # @File : Seuic系统签名.py
 # @Software : PyCharm
 # @Description : PC桌面软件
+# @打包exe : pyinstaller -F Seuic系统签名.py -w
 import json
 import os
 # os.system某些命令会跳出终端,所以用subprocess
@@ -17,6 +18,8 @@ from tkinter.ttk import Combobox
 
 # 浏览本地文件，选择apk路径
 import requests
+
+signed_apk_name = ""
 
 
 def select_apk_file():
@@ -39,12 +42,30 @@ def sign_btn():
     thread_it(get_yiyan())
 
 
+def install_btn():
+    if signed_apk_name is None or signed_apk_name == "":
+        showwarning("警告", "签名后的应用路径不存在！")
+    else:
+        # 脚本拼接
+        command = r'{}/adb/adb.exe install -r {}'.format(os.getcwd(), signed_apk_name)
+        # print('command={}'.format(command))
+        # 应用安装
+        result = run.call(command, shell=True)
+        if result == 0:
+            # 打开签名后的apk目录
+            # run.call(r"start explorer /select,%s" % signed_apk_name, shell=True)
+            print(signed_apk_name)
+        else:
+            showerror("错误", "应用安装失败！")
+
+
 # 系统签名
 def sigh_apk(apk_path):
     log.insert(END, "\n")
     log.insert(END, "待签名应用路径：" + apk_path + "\n")
     log.insert(END, "系统签名类型：" + sign_type.get() + "\n")
     system_signfile_path = sign_file_dir + sign_type.get()
+    global signed_apk_name
     signed_apk_name = apk_path.replace('.apk', '_sys_signed.apk')
     # 脚本拼接
     command = r'java -jar {}/signapk.jar {}/platform.x509.pem {}/platform.pk8 {} {}'.format(
@@ -54,7 +75,7 @@ def sigh_apk(apk_path):
     sys_sign_result = run.call(command, shell=True)
     if sys_sign_result == 0:
         # 打开签名后的apk目录
-        run.call(r"start explorer /select,%s" % signed_apk_name, shell=True)
+        # run.call(r"start explorer /select,%s" % signed_apk_name, shell=True)
         log.insert(END, "签名后应用路径：%s" % signed_apk_name + "\n")
         # 日志滚动到末尾
         log.see(END)
@@ -128,7 +149,11 @@ numberChosen.pack()
 
 # 签名按钮
 btn = Button(text="开始签名", font=('楷体', 22), command=sign_btn)
-btn.pack(ipadx=50, ipady=8, padx=20, pady=20)
+btn.pack(ipadx=10, ipady=5, pady=10)
+
+# 安装签名后的应用按钮
+install_btn = Button(text="安装签名应用", font=('楷体', 22), command=install_btn)
+install_btn.pack(pady=10, after=btn)
 
 # 日志显示
 log = ScrolledText(height="10")
