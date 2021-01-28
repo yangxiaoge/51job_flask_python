@@ -5,6 +5,7 @@
 # @Software : PyCharm
 # @Description : PC桌面软件
 # @打包exe : pyinstaller -F Seuic系统签名.py -w
+import datetime
 import json
 import os
 # os.system某些命令会跳出终端,所以用subprocess
@@ -62,6 +63,9 @@ def install_btn():
 # 系统签名
 def sigh_apk(apk_path):
     log.insert(END, "\n")
+    # 获取当前时间
+    now_time = datetime.datetime.now().strftime('%F %T')
+    log.insert(END, "当前时间为：" + now_time + "\n")
     log.insert(END, "待签名应用路径：" + apk_path + "\n")
     log.insert(END, "系统签名类型：" + sign_type.get() + "\n")
     system_signfile_path = sign_file_dir + sign_type.get()
